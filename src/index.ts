@@ -18,7 +18,9 @@ const AnimeInputSchema = z.object({
 const AnimeSchema = z.object({
   title: z.string(),
   description: z.string(),
-  rating:z.number(),
+  rating: z.number(),
+  studio: z.string(),
+  author: z.string(),
 });
 
 // Define a anime Suggestion flow
@@ -45,13 +47,26 @@ export const animeSuggestionFlow = ai.defineFlow(
   },
 );
 
-// Run the flow
-async function main() {
-  const anime = await animeSuggestionFlow({
-	  genre: "action comedy",
+async function getInput() {
+  let input: string;
+  console.log("   === Anime Suggestion ===   ");
+  console.log(" Enter a comma seperated list of genres the anime should belong to: ");
+  process.stdin.on("data", async (data) => {
+    input = data.toString().trim().split(',').join(' ');
+    const anime = await animeSuggestionFlow({
+      genre: input,
+    });
+    if (anime) {
+      console.log(anime);
+      process.exit(1);
+    }
   });
 
-  console.log(anime);
+}
+
+// Run the flow
+async function main() {
+  await getInput();
 }
 
 main().catch(console.error);

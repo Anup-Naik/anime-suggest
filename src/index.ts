@@ -52,13 +52,15 @@ async function getInput() {
   console.log("   === Anime Suggestion ===   ");
   console.log(" Enter a comma seperated list of genres the anime should belong to: ");
   process.stdin.on("data", async (data) => {
-    input = data.toString().trim().split(',').join(' ');
+    input = data.toString().trim();
     const anime = await animeSuggestionFlow({
       genre: input,
     });
     if (anime) {
       console.log(anime);
       process.exit(1);
+    } else {
+      console.log(" Enter a comma seperated list of genres the anime should belong to: ");
     }
   });
 
